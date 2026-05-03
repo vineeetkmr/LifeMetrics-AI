@@ -1,4 +1,4 @@
-# LifeMetrics AI
+# LifeMetrics-AI
 
 Demo-ready web app to upload or paste health reports, analyze findings with AI, compare trends across years, and generate diet recommendations (including vegetarian options).
 
