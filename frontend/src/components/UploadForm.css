@@ -1,0 +1,48 @@
+.upload-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 12px;
+}
+
+.upload-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.upload-form input,
+.upload-form textarea,
+.upload-form button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font: inherit;
+}
+
+.upload-form textarea {
+  resize: vertical;
+}
+
+.upload-form button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.upload-form button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.upload-form .secondary {
+  background: #0f172a;
+}
+
+.upload-form .actions {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}

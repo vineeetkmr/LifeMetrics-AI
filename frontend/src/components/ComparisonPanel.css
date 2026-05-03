@@ -1,0 +1,20 @@
+.chart {
+  margin-bottom: 16px;
+}
+
+.highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+}
+
+.highlight {
+  border: 1px solid #dbeafe;
+  background: #eff6ff;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.highlight p {
+  margin: 6px 0;
+}

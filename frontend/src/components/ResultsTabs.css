@@ -1,0 +1,42 @@
+.tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  width: auto;
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.tab.active {
+  background: #1d4ed8;
+  color: white;
+}
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.mode-toggle {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.toggle {
+  width: auto;
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.toggle.active {
+  background: #16a34a;
+  color: white;
+}

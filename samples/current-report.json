@@ -1,0 +1,12 @@
+{
+  "patient": "Sample User",
+  "year": 2026,
+  "metrics": {
+    "totalCholesterol": 210,
+    "ldl": 132,
+    "hdl": 45,
+    "triglycerides": 160,
+    "vitaminD": 19.2,
+    "alt": 41
+  }
+}
