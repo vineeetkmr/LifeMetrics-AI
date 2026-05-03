@@ -1,0 +1,43 @@
+steps:
+  # Install workspace dependencies at repo root.
+  - name: "node:20"
+    id: "Install dependencies"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "npm ci"
+
+  # Ensure frontend bundle compiles on each build.
+  - name: "node:20"
+    id: "Build frontend"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - "npm run build"
+
+  # Build backend container image.
+  - name: "gcr.io/cloud-builders/docker"
+    id: "Build backend image"
+    args:
+      - "build"
+      - "-t"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}:$SHORT_SHA"
+      - "./backend"
+
+  # Push backend image to Artifact Registry.
+  - name: "gcr.io/cloud-builders/docker"
+    id: "Push backend image"
+    args:
+      - "push"
+      - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}:$SHORT_SHA"
+
+images:
+  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}:$SHORT_SHA"
+
+substitutions:
+  _REGION: "asia-south1"
+  _REPOSITORY: "lifemetrics-ai"
+  _IMAGE: "backend-api"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
