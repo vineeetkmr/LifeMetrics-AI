@@ -1,20 +1,57 @@
-.chart {
-  margin-bottom: 16px;
+.chart-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  margin-bottom: 24px;
+}
+
+.chart-card {
+  background: #f8fafc;
+  border: 1px solid #dbeafe;
+  border-radius: 18px;
+  padding: 18px;
 }
 
 .highlights {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
 }
 
 .highlight {
   border: 1px solid #dbeafe;
   background: #eff6ff;
-  border-radius: 8px;
-  padding: 10px;
+  border-radius: 16px;
+  padding: 18px;
 }
 
 .highlight p {
-  margin: 6px 0;
+  margin: 8px 0 0;
+  color: #334155;
+}
+
+.highlight.positive {
+  border-color: #d1fae5;
+  background: #ecfdf5;
+}
+
+.highlight.negative {
+  border-color: #fee2e2;
+  background: #fef2f2;
+}
+
+.highlight-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.highlight-arrow {
+  font-size: 1.2rem;
+}
+
+.highlight-value,
+.highlight-change {
+  margin: 6px 0 0;
 }

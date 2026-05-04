@@ -1,4 +1,4 @@
-export type ActiveTab = "Current Report" | "Comparison" | "Diet Plan";
+export type ActiveTab = "Upload" | "Analysis" | "Comparison" | "Diet Plan";
 
 export type ViewMode = "detailed" | "eli5";
 

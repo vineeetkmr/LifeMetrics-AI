@@ -1,6 +1,9 @@
 import type { AnalysisResult, ReportFormState } from "../types/health";
 
-export async function analyzeReport(formState: ReportFormState): Promise<AnalysisResult> {
+export async function analyzeReport(
+  formState: ReportFormState,
+  vegetarianOnly: boolean
+): Promise<AnalysisResult> {
   const formData = new FormData();
   const {
     currentFile,
@@ -23,10 +26,16 @@ export async function analyzeReport(formState: ReportFormState): Promise<Analysi
     formData.append("previousStructuredData", previousStructuredData);
   }
 
+  formData.append("vegetarianOnly", String(vegetarianOnly));
+
   const response = await fetch("https://life-metrics-ai-backend.vercel.app/api/analyze-report", {
     method: "POST",
     body: formData
   });
+  // const response = await fetch("http://localhost:4000/api/analyze-report", {
+  //   method: "POST",
+  //   body: formData
+  // });
 
   const data = (await response.json()) as AnalysisResult & { error?: string };
   if (!response.ok) {

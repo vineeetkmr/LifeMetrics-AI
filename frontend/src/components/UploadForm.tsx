@@ -5,7 +5,7 @@ import "./UploadForm.css";
 interface UploadFormProps {
   formState: ReportFormState;
   onChange: (updates: Partial<ReportFormState>) => void;
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  onAnalyzeClick: (event: FormEvent<HTMLFormElement>) => void;
   onLoadSampleData: () => void;
   isLoading: boolean;
 }
@@ -13,13 +13,13 @@ interface UploadFormProps {
 export default function UploadForm({
   formState,
   onChange,
-  onSubmit,
+  onAnalyzeClick,
   onLoadSampleData,
   isLoading
 }: UploadFormProps) {
   return (
     <section className="card">
-      <form onSubmit={onSubmit} className="upload-form">
+      <form onSubmit={onAnalyzeClick} className="upload-form">
         <div>
           <label>Current Report Upload (PDF/TXT)</label>
           <input
@@ -29,12 +29,11 @@ export default function UploadForm({
           />
         </div>
         <div>
-          <label>Previous Reports Upload (multiple)</label>
+          <label>Previous Reports Upload</label>
           <input
             type="file"
             accept=".pdf,.txt,.json"
-            multiple
-            onChange={(event) => onChange({ previousFiles: Array.from(event.target.files ?? []) })}
+            onChange={(event) => onChange({ previousFiles: event.target.files ? [event.target.files[0]] : [] })}
           />
         </div>
         <div>
@@ -78,7 +77,7 @@ export default function UploadForm({
           <button type="button" className="secondary" onClick={onLoadSampleData}>
             Load Sample Reports
           </button>
-          <button type="submit" disabled={isLoading}>
+          <button type="submit" className="primary" disabled={isLoading}>
             {isLoading ? "Analyzing..." : "Analyze Report"}
           </button>
         </div>

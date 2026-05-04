@@ -18,12 +18,14 @@ const defaultFormState: ReportFormState = {
 };
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<ActiveTab>("Current Report");
+  const [activeTab, setActiveTab] = useState<ActiveTab>("Upload");
   const [mode, setMode] = useState<ViewMode>("detailed");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string>("");
   const [formState, setFormState] = useState<ReportFormState>(defaultFormState);
+  const [showDietModal, setShowDietModal] = useState<boolean>(false);
+  const [vegetarianOnly, setVegetarianOnly] = useState<boolean>(false);
 
   const loadSampleData = () => {
     setFormState((prev) => ({
@@ -35,15 +37,20 @@ export default function App() {
     }));
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleAnalyzeClick = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setShowDietModal(true);
+  };
+
+  const submitAnalysis = async (vegetarianPreference: boolean) => {
+    setShowDietModal(false);
     setIsLoading(true);
     setError("");
 
     try {
-      const data = await analyzeReport(formState);
+      const data = await analyzeReport(formState, vegetarianPreference);
       setResult(data);
-      setActiveTab("Current Report");
+      setActiveTab("Analysis");
     } catch (submitError) {
       const message = submitError instanceof Error ? submitError.message : "Unexpected error";
       setError(message);
@@ -52,44 +59,106 @@ export default function App() {
     }
   };
 
+  const handleConfirmDietPreference = () => {
+    submitAnalysis(vegetarianOnly);
+  };
+
+  const handleCancelDietPreference = () => {
+    setShowDietModal(false);
+  };
+
+  const handleGetStarted = () => setActiveTab("Upload");
+
   return (
     <div className="page">
-      <header className="hero">
-        <h1>LifeMetrics AI</h1>
-        <p>
-          Upload current and past health reports to get doctor-style explanations, trend insights,
-          and personalized diet suggestions.
-        </p>
+      <header className="hero hero-landing">
+        <div>
+          <span className="eyebrow">Health intelligence made simple</span>
+          <h1>LifeMetrics AI</h1>
+          <p>
+            Analyze clinical reports, compare trends, and receive tailored meal plans with a clean,
+            guided workflow.
+          </p>
+          {/* <button className="hero-cta" type="button" onClick={handleGetStarted}>
+            Get Started
+          </button> */}
+        </div>
       </header>
 
-      <UploadForm
-        formState={formState}
-        onChange={(updates) => setFormState((prev) => ({ ...prev, ...updates }))}
-        onSubmit={handleSubmit}
-        onLoadSampleData={loadSampleData}
-        isLoading={isLoading}
-      />
-
-      {error ? <p className="error">{error}</p> : null}
-
-      <section className="card">
+      <section className="workflow-card card">
         <ResultsTabs
           activeTab={activeTab}
           onTabChange={setActiveTab}
           mode={mode}
           onModeChange={setMode}
+          isReportReady={!!result}
         />
-
-        {!result ? <p>Submit a report to see analysis results.</p> : null}
-
-        {result && activeTab === "Current Report" ? (
-          <CurrentReportPanel result={result} mode={mode} />
-        ) : null}
-        {result && activeTab === "Comparison" ? (
-          <ComparisonPanel comparison={result.comparison ?? []} />
-        ) : null}
-        {result && activeTab === "Diet Plan" ? <DietPlanPanel dietPlan={result.dietPlan} /> : null}
       </section>
+
+      {isLoading ? (
+        <div className="loader-overlay">
+          <div className="loader-card">
+            <div className="spinner" />
+            <p>Analyzing report, please wait...</p>
+          </div>
+        </div>
+      ) : null}
+
+      {activeTab === "Upload" ? (
+        <UploadForm
+          formState={formState}
+          onChange={(updates) => setFormState((prev) => ({ ...prev, ...updates }))}
+          onAnalyzeClick={handleAnalyzeClick}
+          onLoadSampleData={loadSampleData}
+          isLoading={isLoading}
+        />
+      ) : (
+        <section className="card results-card">
+          {error ? <p className="error">{error}</p> : null}
+
+          {activeTab === "Analysis" ? (
+            <CurrentReportPanel result={result} mode={mode} />
+          ) : null}
+          {activeTab === "Comparison" ? (
+            <ComparisonPanel comparison={result?.comparison ?? []} />
+          ) : null}
+          {activeTab === "Diet Plan" ? (
+            <DietPlanPanel dietPlan={result?.dietPlan ?? { goals: [], vegetarianOptions: [], generalTips: [] }} vegetarianOnly={vegetarianOnly} />
+          ) : null}
+
+          {!result ? (
+            <div className="empty-state">
+              <strong>No analysis available yet.</strong>
+              <p>Upload your report in the Upload tab to see findings, trends, and diet suggestions.</p>
+            </div>
+          ) : null}
+        </section>
+      )}
+
+      {showDietModal ? (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h2>Diet Preference</h2>
+            <p>Select whether to suggest only vegetarian diet options.</p>
+            <label className="toggle-field">
+              <input
+                type="checkbox"
+                checked={vegetarianOnly}
+                onChange={(event) => setVegetarianOnly(event.target.checked)}
+              />
+              Suggest only vegetarian diet
+            </label>
+            <div className="modal-actions">
+              <button className="secondary" type="button" onClick={handleCancelDietPreference}>
+                Cancel
+              </button>
+              <button className="primary" type="button" onClick={handleConfirmDietPreference}>
+                Analyze with {vegetarianOnly ? "Vegetarian" : "Balanced"} Diet
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
