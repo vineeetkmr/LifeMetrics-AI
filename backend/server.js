@@ -91,6 +91,24 @@ const demoResponse = {
   ]
 };
 
+function getFallbackResponse(payload) {
+  if (payload.vegetarianOnly) {
+    return {
+      ...demoResponse,
+      dietPlan: {
+        ...demoResponse.dietPlan,
+        vegetarianOptions: [
+          "Breakfast: Oats with chia seeds, walnuts, and fortified soy milk.",
+          "Lunch: Mixed bean salad with olive oil, lemon, and leafy greens.",
+          "Snack: Roasted chickpeas with fruit.",
+          "Dinner: Grilled tofu, quinoa, and steamed broccoli."
+        ]
+      }
+    };
+  }
+  return demoResponse;
+}
+
 function extractTextFromUpload(file) {
   if (!file) return "";
   const mime = file.mimetype || "";
@@ -116,7 +134,23 @@ function parseModelJson(content) {
 }
 
 async function analyzeWithAI(payload) {
-  if (!process.env.OPENAI_API_KEY && !process.env.GOOGLE_API_KEY) return demoResponse;
+  if (!process.env.OPENAI_API_KEY && !process.env.GOOGLE_API_KEY) {
+    if (payload.vegetarianOnly) {
+      return {
+        ...demoResponse,
+        dietPlan: {
+          ...demoResponse.dietPlan,
+          vegetarianOptions: [
+            "Breakfast: Oats with chia seeds, walnuts, and fortified soy milk.",
+            "Lunch: Mixed bean salad with olive oil, lemon, and leafy greens.",
+            "Snack: Roasted chickpeas with fruit.",
+            "Dinner: Grilled tofu, quinoa, and steamed broccoli."
+          ]
+        }
+      };
+    }
+    return demoResponse;
+  }
 
   const client = process.env.GOOGLE_API_KEY
     ? new OpenAI({
@@ -139,6 +173,8 @@ detailedExplanation (string),
 simplifiedSummary (string),
 comparison (array with metric, previous, current, changePercent, direction, unit, note),
 dietPlan (object with goals, vegetarianOptions, generalTips)
+
+Diet preference: ${payload.vegetarianOnly ? "vegetarian only" : "balanced with vegetarian options"}
 
 Payload:
 ${JSON.stringify(payload, null, 2)}`
@@ -164,6 +200,8 @@ app.post(
       const currentReportText = await extractTextFromUpload(currentFile);
       const previousReportTexts = await Promise.all(previousFiles.map(extractTextFromUpload));
 
+      const vegetarianOnly = String(req.body.vegetarianOnly) === "true";
+
       const payload = {
         currentReportText,
         previousReportTexts,
@@ -174,7 +212,8 @@ app.post(
           ? JSON.parse(req.body.previousStructuredData)
           : null,
         currentPastedText: req.body.currentPastedText || "",
-        previousPastedText: req.body.previousPastedText || ""
+        previousPastedText: req.body.previousPastedText || "",
+        vegetarianOnly
       };
 
       const result = await analyzeWithAI(payload);
