@@ -1,33 +1,32 @@
 .upload-form {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
 }
 
 .upload-form label {
   display: block;
-  margin-bottom: 6px;
-  font-weight: 600;
+  margin-bottom: 8px;
+  font-weight: 700;
+  color: #0f172a;
 }
 
 .upload-form input,
 .upload-form textarea,
 .upload-form button {
   width: 100%;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 14px;
+  border-radius: 14px;
   border: 1px solid #cbd5e1;
   font: inherit;
 }
 
 .upload-form textarea {
   resize: vertical;
+  min-height: 120px;
 }
 
 .upload-form button {
-  background: #2563eb;
-  color: white;
-  border: none;
   cursor: pointer;
 }
 
@@ -37,12 +36,13 @@
 }
 
 .upload-form .secondary {
-  background: #0f172a;
+  background: #f1f5f9;
+  color: #0f172a;
 }
 
 .upload-form .actions {
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 14px;
 }

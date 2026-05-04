@@ -24,4 +24,4 @@ export const samplePreviousData = {
   }
 };
 
-export const tabs = ["Current Report", "Comparison", "Diet Plan"] as const;
+export const tabs = ["Upload", "Analysis", "Comparison", "Diet Plan"] as const;

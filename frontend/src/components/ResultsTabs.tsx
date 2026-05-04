@@ -7,27 +7,33 @@ interface ResultsTabsProps {
   onTabChange: (tab: ActiveTab) => void;
   mode: ViewMode;
   onModeChange: (mode: ViewMode) => void;
+  isReportReady: boolean;
 }
 
 export default function ResultsTabs({
   activeTab,
   onTabChange,
   mode,
-  onModeChange
+  onModeChange,
+  isReportReady
 }: ResultsTabsProps) {
   return (
     <div className="top-row">
       <div className="tabs">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            className={tab === activeTab ? "tab active" : "tab"}
-            onClick={() => onTabChange(tab)}
-            type="button"
-          >
-            {tab}
-          </button>
-        ))}
+        {tabs.map((tab) => {
+          const disabled = tab !== "Upload" && !isReportReady;
+          return (
+            <button
+              key={tab}
+              className={tab === activeTab ? "tab active" : "tab"}
+              onClick={() => !disabled && onTabChange(tab)}
+              type="button"
+              disabled={disabled}
+            >
+              {tab}
+            </button>
+          );
+        })}
       </div>
       <div className="mode-toggle">
         <span>View:</span>
