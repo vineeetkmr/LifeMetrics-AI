@@ -23,7 +23,7 @@ export async function analyzeReport(formState: ReportFormState): Promise<Analysi
     formData.append("previousStructuredData", previousStructuredData);
   }
 
-  const response = await fetch("/api/analyze-report", {
+  const response = await fetch("https://life-metrics-ai-backend.vercel.app/api/analyze-report", {
     method: "POST",
     body: formData
   });
