@@ -29,7 +29,7 @@ export default function UploadForm({
           />
         </div>
         <div>
-          <label>Previous Reports Upload</label>
+          <label>Previous Report Upload</label>
           <input
             type="file"
             accept=".pdf,.txt,.json"
@@ -47,12 +47,12 @@ export default function UploadForm({
           />
         </div>
         <div>
-          <label>Previous Reports (paste text)</label>
+          <label>Previous Report (paste text)</label>
           <textarea
             rows={4}
             value={formState.previousText}
             onChange={(event) => onChange({ previousText: event.target.value })}
-            placeholder="Paste previous reports..."
+            placeholder="Paste Previous Report..."
           />
         </div>
         <div style={{ display: "none" }}>
