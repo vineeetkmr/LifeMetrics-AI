@@ -36,6 +36,7 @@ export default function UploadForm({
             onChange={(event) => onChange({ previousFiles: event.target.files ? [event.target.files[0]] : [] })}
           />
         </div>
+        <br></br>
         <div>
           <label>Current Report (paste text)</label>
           <textarea
@@ -54,7 +55,7 @@ export default function UploadForm({
             placeholder="Paste previous reports..."
           />
         </div>
-        <div>
+        <div style={{ display: "none" }}>
           <label>Current Structured Data (JSON)</label>
           <textarea
             rows={6}
@@ -63,7 +64,7 @@ export default function UploadForm({
             placeholder='{"metrics":{"ldl":130,"vitaminD":19}}'
           />
         </div>
-        <div>
+        <div style={{ display: "none" }}>
           <label>Previous Structured Data (JSON)</label>
           <textarea
             rows={6}
