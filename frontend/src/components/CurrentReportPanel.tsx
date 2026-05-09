@@ -19,6 +19,18 @@ export default function CurrentReportPanel({ result, mode }: CurrentReportPanelP
       </div>
 
       <div className="summary-grid">
+        {result.demographics && (
+          <div className="summary-card demographics-card" style={{ gridColumn: "1 / -1", backgroundColor: "#f8fafc", border: "1px solid #cbd5e1" }}>
+            <h4 style={{ marginTop: 0, marginBottom: "0.5rem", color: "#0f172a" }}>Patient Profile</h4>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "1.5rem" }}>
+              {result.demographics.age && <div><strong>Age:</strong> {result.demographics.age}</div>}
+              {result.demographics.height && <div><strong>Height:</strong> {result.demographics.height} cm</div>}
+              {result.demographics.weight && <div><strong>Weight:</strong> {result.demographics.weight} kg</div>}
+              {result.demographics.bmi && <div><strong>BMI:</strong> {result.demographics.bmi}</div>}
+            </div>
+          </div>
+        )}
+
         {result.summary.map((item, idx) => (
           <div key={`${item}-${idx}`} className="summary-card">
             <p>{item}</p>

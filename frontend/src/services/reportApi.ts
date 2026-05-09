@@ -11,7 +11,10 @@ export async function analyzeReport(
     currentText,
     previousText,
     currentStructuredData,
-    previousStructuredData
+    previousStructuredData,
+    age,
+    height,
+    weight
   } = formState;
 
   if (currentFile) formData.append("currentReportFile", currentFile);
@@ -24,6 +27,16 @@ export async function analyzeReport(
   }
   if (previousStructuredData.trim()) {
     formData.append("previousStructuredData", previousStructuredData);
+  }
+
+  if (age && String(age).trim()) {
+    formData.append("age", String(age).trim());
+  }
+  if (height && String(height).trim()) {
+    formData.append("height", String(height).trim());
+  }
+  if (weight && String(weight).trim()) {
+    formData.append("weight", String(weight).trim());
   }
 
   formData.append("vegetarianOnly", String(vegetarianOnly));
