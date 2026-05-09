@@ -20,6 +20,43 @@ export default function UploadForm({
   return (
     <section className="card">
       <form onSubmit={onAnalyzeClick} className="upload-form">
+        <fieldset style={{ gridColumn: "1 / -1", border: "1px solid #cbd5e1", borderRadius: "14px", padding: "1rem", backgroundColor: "#f8fafc", margin: "0" }}>
+          <legend style={{ padding: "0 8px", fontWeight: 600, color: "#334155", fontSize: "0.9rem" }}>Patient Demographics (Optional)</legend>
+          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+            <div style={{ flex: 1, minWidth: "120px" }}>
+              <label>Age</label>
+              <input
+                type="number"
+                value={formState.age}
+                onChange={(event) => onChange({ age: event.target.value })}
+                placeholder="e.g. 35"
+                min="0"
+              />
+            </div>
+            <div style={{ flex: 1, minWidth: "120px" }}>
+              <label>Height (in CM)</label>
+              <input
+                type="number"
+                step="any"
+                value={formState.height}
+                onChange={(event) => onChange({ height: event.target.value })}
+                placeholder="e.g. 168.5"
+                min="0"
+              />
+            </div>
+            <div style={{ flex: 1, minWidth: "120px" }}>
+              <label>Weight (kg)</label>
+              <input
+                type="number"
+                step="any"
+                value={formState.weight}
+                onChange={(event) => onChange({ weight: event.target.value })}
+                placeholder="e.g. 69.4"
+                min="0"
+              />
+            </div>
+          </div>
+        </fieldset>
         <div>
           <label>Current Report Upload (PDF/TXT)</label>
           <input

@@ -25,6 +25,14 @@ Your role is to:
 - Identify key findings and explain them in plain English.
 - Compare current report with previous reports to highlight improvements or declines.
 - Suggest evidence-based diet plans tailored to the findings (vegetarian options included).
+- IMPORTANT FOR DIET PLAN: You MUST structure the \`vegetarianOptions\` array exactly like this example (each section as one string in the array), while tailoring the actual foods to the user's BMI and health report:
+   [
+     "🌞 Morning Routine: Empty stomach: 1 banana + 5 soaked almonds (to balance sugar). Morning walk: 30-40 mins. Twice a week: Herbal juice.",
+     "🥗 Breakfast (Rotate Fruits): Mon/Wed/Fri: Papaya + chia. Tue/Thu: Apple + guava. Sat/Sun: Watermelon. Add: Fortified milk.",
+     "🍲 Lunch: Base: 2-3 rotis + dal + seasonal sabzi. Salad: Cucumber + tomato. Add-ons: Daily buttermilk, weekly paneer.",
+     "🌙 Evening: Light meal options: Dal soup, sprout chaat, vegetable upma, or ragi dosa. Keep it light but protein-rich.",
+     "🛌 Night: Herbal tea if needed. Early dinner (by 8 PM). 7-8 hours sleep."
+   ]
 - Format responses with:
    1. Summary of report
    2. Detailed explanation
@@ -154,9 +162,9 @@ async function analyzeWithAI(payload) {
 
   const client = process.env.GOOGLE_API_KEY
     ? new OpenAI({
-        apiKey: process.env.GOOGLE_API_KEY,
-        baseURL: "https://generativelanguage.googleapis.com/v1beta/openai"
-      })
+      apiKey: process.env.GOOGLE_API_KEY,
+      baseURL: "https://generativelanguage.googleapis.com/v1beta/openai"
+    })
     : new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
   const completion = await client.chat.completions.create({
@@ -175,7 +183,7 @@ comparison (array with metric, previous, current, changePercent, direction, unit
 dietPlan (object with goals, vegetarianOptions, generalTips)
 
 Diet preference: ${payload.vegetarianOnly ? "vegetarian only" : "balanced with vegetarian options"}
-
+${payload.age ? `Patient Age: ${payload.age}\n` : ""}${payload.height ? `Patient Height: ${payload.height} cm\n` : ""}${payload.weight ? `Patient Weight: ${payload.weight} kg\n` : ""}${payload.bmi ? `Patient BMI: ${payload.bmi}\nIMPORTANT: Provide an analysis of this BMI in the detailedExplanation. Ensure the dietPlan provides PROPER MEAL SUGGESTIONS containing specific names of fruits and foods for each meal, strictly tailored to this BMI category. DO NOT output generic text like "A balanced lunch with vegetables" - name the specific vegetables and foods!\n` : ""}
 Payload:
 ${JSON.stringify(payload, null, 2)}`
       }
@@ -202,6 +210,15 @@ app.post(
 
       const vegetarianOnly = String(req.body.vegetarianOnly) === "true";
 
+      let bmi = null;
+      if (req.body.height && req.body.weight) {
+        const heightMeters = parseFloat(req.body.height) / 100;
+        const weightKg = parseFloat(req.body.weight);
+        if (heightMeters > 0 && weightKg > 0) {
+          bmi = (weightKg / (heightMeters * heightMeters)).toFixed(1);
+        }
+      }
+
       const payload = {
         currentReportText,
         previousReportTexts,
@@ -213,10 +230,24 @@ app.post(
           : null,
         currentPastedText: req.body.currentPastedText || "",
         previousPastedText: req.body.previousPastedText || "",
-        vegetarianOnly
+        vegetarianOnly,
+        age: req.body.age || null,
+        height: req.body.height || null,
+        weight: req.body.weight || null,
+        bmi
       };
 
       const result = await analyzeWithAI(payload);
+
+      if (payload.age || payload.height || payload.weight || payload.bmi) {
+        result.demographics = {
+          age: payload.age,
+          height: payload.height,
+          weight: payload.weight,
+          bmi: payload.bmi
+        };
+      }
+
       res.json(result);
     } catch (error) {
       res.status(500).json({

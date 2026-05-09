@@ -14,7 +14,10 @@ const defaultFormState: ReportFormState = {
   currentText: "",
   previousText: "",
   currentStructuredData: "",
-  previousStructuredData: ""
+  previousStructuredData: "",
+  age: "",
+  weight: "",
+  height: ""
 };
 
 export default function App() {

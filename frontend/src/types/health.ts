@@ -24,6 +24,12 @@ export interface AnalysisResult {
   simplifiedSummary: string;
   comparison: ComparisonItem[];
   dietPlan: DietPlan;
+  demographics?: {
+    age?: string | null;
+    height?: string | null;
+    weight?: string | null;
+    bmi?: string | null;
+  };
 }
 
 export interface ReportFormState {
@@ -33,4 +39,7 @@ export interface ReportFormState {
   previousText: string;
   currentStructuredData: string;
   previousStructuredData: string;
+  age: string;
+  weight: string;
+  height: string;
 }
